@@ -1,5 +1,14 @@
-export let factory_state = Class =>
+import Tree from "./tree"
+
+export let include = Class =>
   class extends Class {
-    static factory(...args) {
+    include(dir) {
+      let tree = new Tree(dir).build((self, file) =>
+        (...args) => require(file).default.bind(self)(...args)
+      )
+      
+      for(let key in tree) {
+        this[key] = tree[key]
+      }
     }
   }

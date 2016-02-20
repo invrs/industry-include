@@ -1,22 +1,27 @@
 import { factory } from "industry"
-import { factory_state } from "../../"
+import { factory_instance } from "industry-factory-instance"
+import { include } from "../../"
 
 describe("factory_state", () => {
-  let test, id
+  let test
 
-  function makeTest(id) {
+  function makeTest() {
     return factory()
-      .set("factory_state", factory_state)
+      .set("factory_instance", factory_instance)
+      .set("include", include)
       .base(class {
         constructor() {
-          this.id = id
-          this.rand = Math.random()
+          this.include(`${__dirname}/../`)
         }
       })
   }
 
   beforeEach(() => {
-    id = Math.random()
-    test = makeTest(id)
+    test = makeTest()
+  })
+
+  it("assigns require function based on filename", () => {
+    expect(test().integrate["industry-include"].spec)
+      .toEqual(jasmine.any(Function))
   })
 })
