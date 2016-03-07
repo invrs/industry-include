@@ -8,11 +8,11 @@ Given you have `files/files.test.js` at `${__dirname}`:
 
 ```js
 import { factory } from "industry"
-import { factory_instance } from "industry-factory-instance"
+import { instance } from "industry-instance"
 import { include } from "industry-include"
 
 let test = factory()
-  .set("factory_instance", factory_instance)
+  .set("instance", instance)
   .set("include", include)
   .base(class {
     constructor() {
