@@ -1,6 +1,6 @@
 {
   "name": "industry-include",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/invrs/industry-include#readme",
   "dependencies": {
     "industry": "",
-    "industry-instance": "",
+    "industry-instance": ""
   },
   "devDependencies": {
     "babel": "^6.5.2",
