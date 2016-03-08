@@ -18,7 +18,11 @@ let test = factory()
     constructor() {
       this.include(`${__dirname}`)
     }
+
+    hello({ include: { files: { test } } }) {
+      test // import test from `${__dirname}/files/files.test.js`
+    }
   })
 
-test().files.test() // require(`${__dirname}/files/files.test.js`)
+test().hello()
 ```
