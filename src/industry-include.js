@@ -28,7 +28,7 @@ export let include = Class =>
       for (let [ name, fn ] of this.functions().entries()) {
         if (ignore.indexOf(name) == -1) {
           this[name] = (...args) =>
-            fn.bind(this)({ ...args, include: this._include || {} })
+            fn.bind(this)(...args, { include: this._include || {} })
         }
       }
     }
