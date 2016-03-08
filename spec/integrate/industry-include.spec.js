@@ -15,8 +15,8 @@ describe("factory_state", () => {
       .set("standard_io", standard_io)
       .base(class {
         constructor() {
-          this.include(`${__dirname}/../fixture`)
           this.standardIO()
+          this.include(`${__dirname}/../fixture`)
         }
 
         hello({ include }) { return include }
