@@ -1,5 +1,7 @@
 import { factory } from "industry"
+import { functions } from "industry-functions"
 import { instance } from "industry-instance"
+import { standard_io } from "industry-standard-io"
 import { include } from "../../"
 
 describe("factory_state", () => {
@@ -7,21 +9,25 @@ describe("factory_state", () => {
 
   function makeTest() {
     return factory()
-      .set("instance", instance)
+      .set("functions", functions)
       .set("include", include)
+      .set("instance", instance)
+      .set("standard_io", standard_io)
       .base(class {
         constructor() {
-          this.include(`${__dirname}/../`)
+          this.include(`${__dirname}/../fixture`)
+          this.standardIO()
         }
+
+        hello({ include }) { return include }
       })
   }
 
-  beforeEach(() => {
+  it("receives include as parameter", () => {
     test = makeTest()
-  })
-
-  it("assigns require function based on filename", () => {
-    expect(test().integrate["industry-include"].spec)
-      .toEqual(jasmine.any(Function))
+    expect(test().hello().value.file).toEqual(jasmine.any(Function))
+    expect(test().hello().value.file.file2).toEqual(jasmine.any(Function))
+    expect(test().hello().value.server).toEqual(jasmine.any(Function))
+    expect(test().hello().value.server.express).toEqual(jasmine.any(Function))
   })
 })
