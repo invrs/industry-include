@@ -7,7 +7,7 @@ import { include } from "../../"
 describe("factory_state", () => {
   let test
 
-  function makeTest() {
+  function makeTest(options) {
     return factory()
       .set("functions", functions)
       .set("include", include)
@@ -16,7 +16,12 @@ describe("factory_state", () => {
       .base(class {
         constructor() {
           this.standardIO()
-          this.include(`${__dirname}/../fixture`)
+
+          if (options) {
+            this.include(`${__dirname}/../fixture`, options)
+          } else {
+            this.include(`${__dirname}/../fixture`)
+          }
         }
 
         hello({ include }) { return include }
@@ -25,6 +30,24 @@ describe("factory_state", () => {
 
   it("receives include as parameter", () => {
     test = makeTest()
+    expect(test().hello().value.file).toEqual(jasmine.any(Function))
+    expect(test().hello().value.file.file2).toEqual(jasmine.any(Function))
+    expect(test().hello().value.server).toEqual(jasmine.any(Function))
+    expect(test().hello().value.server.express).toEqual(jasmine.any(Function))
+  })
+
+  it("allows explicit passing of directory structure", () => {
+    let fixture = `${__dirname}/../fixture`
+    let files = {
+      files: [ `${fixture}/file.js`, `${fixture}/server.express.js`, `${fixture}/server.js` ],
+      dirs: {
+        [`${fixture}/file`]: {
+          files: [ `${fixture}/file/file2.js` ],
+          dirs: {}
+        }
+      }
+    }
+    test = makeTest({ files })
     expect(test().hello().value.file).toEqual(jasmine.any(Function))
     expect(test().hello().value.file.file2).toEqual(jasmine.any(Function))
     expect(test().hello().value.server).toEqual(jasmine.any(Function))

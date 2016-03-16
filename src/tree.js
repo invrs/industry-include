@@ -26,35 +26,26 @@ export default class Tree {
 
   // Main entry point
   //
-  build(fn, dir = this.root, tree = {}) {
-    let files = this.files(dir, fs.readdirSync(dir))
-
-    this.sortFiles(files.files).forEach(file => {
-      this.addToTree(fn, file, tree)
-    })
-
-    files.dirs.forEach(file => {
-      this.build(fn, file, tree)
-    })
-
+  build(files, fn, dir = this.root, tree = {}) {
+    files = files || this.files(dir)
+    this.processFiles(fn, files, tree)
     return tree
   }
 
-  files(dir, files) {
-    return files.reduce(
+  files(dir) {
+    return fs.readdirSync(dir).reduce(
       (previous, current) => {
         let file = path.join(dir, current)
 
         if (fs.lstatSync(file).isDirectory()) {
-          previous.dirs.push(file)
-        }
-        else {
+          previous.dirs[file] = this.files(file)
+        } else {
           previous.files.push(file)
         }
 
         return previous
       },
-      { dirs: [], files: [] }
+      { dirs: {}, files: [] }
     )
   }
 
@@ -73,6 +64,7 @@ export default class Tree {
   }
 
   pathToArray(file) {
+    file = path.resolve(file)
     file = file
       .replace(`${this.root}/`, "")
       .replace(/\//g, ".")
@@ -96,6 +88,16 @@ export default class Tree {
     )
 
     return classes
+  }
+
+  processFiles(fn, files, tree) {
+    this.sortFiles(files.files).forEach(file => {
+      this.addToTree(fn, file, tree)
+    })
+
+    Object.keys(files.dirs).forEach(dir => {
+      this.processFiles(fn, files.dirs[dir], tree)
+    })
   }
 
   removeExt(file) {

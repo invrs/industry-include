@@ -5,7 +5,12 @@ let cache = {}
 export let include = Class =>
   class extends Class {
     include(...dirs) {
-      let tree
+      let tree, files, options = {}
+
+      if (typeof dirs[dirs.length - 1] == "object") {
+        options = dirs.pop()
+        files = options.files
+      }
       
       this._include = this._include || {}
 
@@ -13,7 +18,7 @@ export let include = Class =>
         if (cache[dir]) {
           tree = cache[dir]
         } else {
-          tree = new Tree(dir).build((self, file) =>
+          tree = new Tree(dir).build(files, (self, file) =>
             (...args) => require(file).default.bind(self)(...args)
           )
         }

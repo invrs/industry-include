@@ -9,6 +9,7 @@ describe("Tree", () => {
       let tree       = new Tree(`${__dirname}/../../spec`)
 
       tree = tree.build(
+        undefined,
         (self, file) => () => {
           expect(file).toEqual(index_path)
           done()
@@ -23,6 +24,7 @@ describe("Tree", () => {
       let tree      = new Tree(`${__dirname}/../../spec/fixture`)
 
       tree = tree.build(
+        undefined,
         (self, file) => () => {
           expect(file).toEqual(file_path)
           done()
@@ -35,7 +37,7 @@ describe("Tree", () => {
 
     it("maps the fixture properly", () => {
       let tree = new Tree(`${__dirname}/../../spec/fixture`)
-      tree = tree.build((self, file) => () => {})
+      tree = tree.build(undefined, (self, file) => () => {})
       
       expect(tree.file).toEqual(jasmine.any(Function))
       expect(tree.file.file2).toEqual(jasmine.any(Function))
