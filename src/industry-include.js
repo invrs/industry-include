@@ -18,9 +18,12 @@ export let include = Class =>
         if (cache[dir]) {
           tree = cache[dir]
         } else {
-          tree = new Tree(dir).build(files, (self, file) =>
-            (...args) => require(file).default.bind(self)(...args)
-          )
+          tree = new Tree(dir).build(files, (self, file, value) => {
+            value = value || require(file).default
+            return (...args) => {
+              return value.bind(self)(...args)
+            }
+          })
         }
         
         for (let key in tree) {

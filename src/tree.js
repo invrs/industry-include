@@ -7,14 +7,14 @@ export default class Tree {
     this.root = path.resolve(dir)
   }
 
-  addToTree(fn, file, tree) {
+  addToTree(fn, file, value, tree) {
     let classes = this.pathToClasses(file)
 
     classes.forEach((item, i) => {
       if (item == "") return
       if (i === classes.length - 1) {
         tree[item] = function(...args) {
-          return fn(this, file)(...args)
+          return fn(this, file, value)(...args)
         }
       }
       else {
@@ -91,8 +91,13 @@ export default class Tree {
   }
 
   processFiles(fn, files, tree) {
+    let values = this.valuesMap(files)
     this.sortFiles(files.files).forEach(file => {
-      this.addToTree(fn, file, tree)
+      let value
+      if (values[file]) {
+        value = values[file]
+      }
+      this.addToTree(fn, file, value, tree)
     })
 
     Object.keys(files.dirs).forEach(dir => {
@@ -109,6 +114,19 @@ export default class Tree {
 
     return files.sort((current, next) =>
       this.removeExt(current) > this.removeExt(next)
+    )
+  }
+
+  valuesMap(files) {
+    if (!files.values) {
+      return {}
+    }
+    return files.files.reduce(
+      (memo, file, i) => {
+        memo[file] = files.values[i]
+        return memo
+      },
+      {}
     )
   }
 }

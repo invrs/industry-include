@@ -45,12 +45,13 @@ describe("factory_state", () => {
           files: [ `${fixture}/file/file2.js` ],
           dirs: {}
         }
-      }
+      },
+      values: [ () => "a", () => "b", () => "c" ]
     }
     test = makeTest({ files })
-    expect(test().hello().value.file).toEqual(jasmine.any(Function))
+    expect(test().hello().value.file()).toEqual("a")
     expect(test().hello().value.file.file2).toEqual(jasmine.any(Function))
-    expect(test().hello().value.server).toEqual(jasmine.any(Function))
-    expect(test().hello().value.server.express).toEqual(jasmine.any(Function))
+    expect(test().hello().value.server.express()).toEqual("b")
+    expect(test().hello().value.server()).toEqual("c")
   })
 })
