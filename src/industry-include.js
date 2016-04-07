@@ -10,6 +10,7 @@ export let include = Class =>
           instance: [ "include" ]
         }
       })
+      super.beforeFactoryOnce()
     }
 
     include(...dirs) {
@@ -39,10 +40,11 @@ export let include = Class =>
         }
       }
 
-      let ignore = [ "functions", "include", "standardIO", "state", "stateful" ]
+      let ignore = this.industry().ignore.instance
 
-      for (let [ name, fn ] of this.functions().entries()) {
+      for (let name in this.functions()) {
         if (ignore.indexOf(name) == -1) {
+          let fn = this[name]
           this[name] = (...args) =>
             fn.bind(this)(...args, { include: this._include || {} })
         }
