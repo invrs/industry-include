@@ -15,8 +15,6 @@ describe("factory_state", () => {
       .set("standard_io", standard_io)
       .base(class {
         constructor() {
-          this.standardIO()
-
           if (options) {
             this.include(`${__dirname}/../fixture`, options)
           } else {
