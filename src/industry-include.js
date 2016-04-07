@@ -4,6 +4,14 @@ let cache = {}
 
 export let include = Class =>
   class extends Class {
+    static beforeFactoryOnce() {
+      this.industry({
+        ignore: {
+          instance: [ "include" ]
+        }
+      })
+    }
+
     include(...dirs) {
       let tree, files, options = {}
 
