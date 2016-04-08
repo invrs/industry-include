@@ -40,7 +40,7 @@ export let include = Class =>
         }
       }
 
-      let ignore = this.industry().ignore.instance
+      let ignore = this.Class.industry().ignore.instance
 
       for (let name in this.functions()) {
         if (ignore.indexOf(name) == -1) {
