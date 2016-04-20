@@ -7,6 +7,7 @@ export let include = Class =>
     static beforeFactoryOnce() {
       this.industry({
         ignore: {
+          args: [ "include" ],
           instance: [ "include" ]
         }
       })
