@@ -11,11 +11,7 @@ import { factory } from "industry"
 import { instance } from "industry-instance"
 import { include } from "industry-include"
 
-let test = factory()
-  .set("instance", instance)
-  .set("include", include)
-
-test = test(class {
+class Test {
   constructor() {
     this.include(`${__dirname}`)
   }
@@ -23,7 +19,11 @@ test = test(class {
   hello({ include: { files: { test } } }) {
     test // import test from `${__dirname}/files/files.test.js`
   }
-})
+}
+
+let test = factory(Test)
+  .set("instance", instance)
+  .set("include", include)
 
 test().hello()
 ```
