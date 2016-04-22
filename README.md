@@ -10,6 +10,7 @@ Given you have `files/files.test.js` at `${__dirname}`:
 import { factory } from "industry"
 import { instance } from "industry-instance"
 import { include } from "industry-include"
+import { standard_io } from "industry-standard-io"
 
 class Test {
   constructor() {
@@ -24,6 +25,7 @@ class Test {
 let test = factory(Test)
   .set("instance", instance)
   .set("include", include)
+  .set("standard_io", standard_io)
 
 test().hello()
 ```
