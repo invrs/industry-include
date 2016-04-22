@@ -14,15 +14,16 @@ import { include } from "industry-include"
 let test = factory()
   .set("instance", instance)
   .set("include", include)
-  .base(class {
-    constructor() {
-      this.include(`${__dirname}`)
-    }
 
-    hello({ include: { files: { test } } }) {
-      test // import test from `${__dirname}/files/files.test.js`
-    }
-  })
+test = test(class {
+  constructor() {
+    this.include(`${__dirname}`)
+  }
+
+  hello({ include: { files: { test } } }) {
+    test // import test from `${__dirname}/files/files.test.js`
+  }
+})
 
 test().hello()
 ```
