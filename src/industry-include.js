@@ -1,7 +1,5 @@
 import Tree from "./tree"
 
-let cache = {}
-
 export let include = Class =>
   class extends Class {
     static beforeFactoryOnce() {
@@ -15,39 +13,37 @@ export let include = Class =>
     }
 
     include(...dirs) {
-      let tree, files, options = {}
+      let files, tree
+      let keys = []
+      let options = {}
 
       if (typeof dirs[dirs.length - 1] == "object") {
         options = dirs.pop()
         files = options.files
       }
-      
-      this._include = this._include || {}
 
       for (let dir of dirs) {
-        if (cache[dir]) {
-          tree = cache[dir]
-        } else {
-          tree = new Tree(dir).build(files, (self, file, value) => {
-            value = value || require(file).default
-            return (...args) => {
-              return value.bind(self)(...args)
-            }
-          })
-        }
+        tree = new Tree(dir).build(files, (self, file, value) => {
+          value = value || require(file).default
+          return (...args) => {
+            return value.bind(self)(...args)
+          }
+        })
         
         for (let key in tree) {
-          this._include[key] = tree[key]
+          this[key] = tree[key]
+          keys.push(key)
         }
       }
 
+      this.Class.industry({ ignore: { instance: keys } })
       let ignore = this.Class.industry().ignore.instance
 
       for (let name in this.functions()) {
         if (ignore.indexOf(name) == -1) {
           let fn = this[name]
           this[name] = (...args) =>
-            fn.bind(this)(...args, { include: this._include || {} })
+            fn.bind(this)(...args, { include: tree || {} })
         }
       }
     }

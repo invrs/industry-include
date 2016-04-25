@@ -34,6 +34,14 @@ describe("factory_state", () => {
     expect(test().hello().value.server.express).toEqual(jasmine.any(Function))
   })
 
+  it("binds includes to instance", () => {
+    test = makeTest()
+    expect(test().file).toEqual(jasmine.any(Function))
+    expect(test().file.file2).toEqual(jasmine.any(Function))
+    expect(test().server).toEqual(jasmine.any(Function))
+    expect(test().server.express).toEqual(jasmine.any(Function))
+  })
+
   it("allows explicit passing of directory structure", () => {
     let fixture = `${__dirname}/../fixture`
     let files = {
