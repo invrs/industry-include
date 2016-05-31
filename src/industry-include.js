@@ -7,7 +7,8 @@ export let include = Class =>
         ignore: {
           args: [ "include" ],
           instance: [ "include" ]
-        }
+        },
+        included: []
       })
       super.beforeFactoryOnce()
     }
@@ -36,7 +37,11 @@ export let include = Class =>
         }
       }
 
-      this.Class.industry({ ignore: { instance: keys } })
+      this.Class.industry({
+        ignore: { instance: keys },
+        included: keys
+      })
+
       let ignore = this.Class.industry().ignore.instance
 
       for (let name in this.functions()) {
