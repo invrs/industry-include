@@ -4,10 +4,7 @@ export let include = Class =>
   class extends Class {
     static beforeFactoryOnce() {
       this.industry({
-        ignore: {
-          args: [ "include" ],
-          instance: [ "include" ]
-        },
+        ignore: { instance: [ "include" ] },
         included: []
       })
       super.beforeFactoryOnce()
@@ -39,17 +36,19 @@ export let include = Class =>
         }
         
         if (bind) {
-          for (let key in tree) {
+          for (let key in new_tree) {
             this[key] = tree[key]
             keys.push(key)
           }
         }
       }
 
-      this.Class.industry({
-        ignore: { instance: keys },
-        included: keys
-      })
+      if (bind) {
+        this.Class.industry({
+          ignore: { instance: keys },
+          included: keys
+        })
+      }
 
       return tree
     }
