@@ -14,26 +14,35 @@ export let include = Class =>
     }
 
     include(...dirs) {
-      let files, tree
+      let bind = true
+      let files
+      let tree = {}
       let keys = []
       let options = {}
 
       if (typeof dirs[dirs.length - 1] == "object") {
         options = dirs.pop()
         files = options.files
+        bind = options.bind != false
       }
 
       for (let dir of dirs) {
-        tree = new Tree(dir).build(files, (self, file, value) => {
+        let new_tree = new Tree(dir).build(files, (self, file, value) => {
           value = value || require(file).default
           return (...args) => {
             return value.bind(self)(...args)
           }
         })
+
+        for (let key in new_tree) {
+          tree[key] = new_tree[key]
+        }
         
-        for (let key in tree) {
-          this[key] = tree[key]
-          keys.push(key)
+        if (bind) {
+          for (let key in tree) {
+            this[key] = tree[key]
+            keys.push(key)
+          }
         }
       }
 
@@ -42,14 +51,6 @@ export let include = Class =>
         included: keys
       })
 
-      let ignore = this.Class.industry().ignore.instance
-
-      for (let name in this.functions()) {
-        if (ignore.indexOf(name) == -1) {
-          let fn = this[name]
-          this[name] = (...args) =>
-            fn.bind(this)(...args, { include: tree || {} })
-        }
-      }
+      return tree
     }
   }

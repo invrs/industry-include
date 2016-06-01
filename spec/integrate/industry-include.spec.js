@@ -26,20 +26,21 @@ describe("factory_state", () => {
       })
   }
 
-  it("receives include as parameter", () => {
-    test = makeTest()
-    expect(test().hello().value.file).toEqual(jasmine.any(Function))
-    expect(test().hello().value.file.file2).toEqual(jasmine.any(Function))
-    expect(test().hello().value.server).toEqual(jasmine.any(Function))
-    expect(test().hello().value.server.express).toEqual(jasmine.any(Function))
-  })
-
   it("binds includes to instance", () => {
     test = makeTest()
     expect(test().file).toEqual(jasmine.any(Function))
     expect(test().file.file2).toEqual(jasmine.any(Function))
     expect(test().server).toEqual(jasmine.any(Function))
     expect(test().server.express).toEqual(jasmine.any(Function))
+  })
+
+  it("returns the tree", () => {
+    test = makeTest()
+    let tree = test().include(`${__dirname}/../fixture`)
+    expect(tree.file).toEqual(jasmine.any(Function))
+    expect(tree.file.file2).toEqual(jasmine.any(Function))
+    expect(tree.server).toEqual(jasmine.any(Function))
+    expect(tree.server.express).toEqual(jasmine.any(Function))
   })
 
   it("allows explicit passing of directory structure", () => {
@@ -55,9 +56,9 @@ describe("factory_state", () => {
       values: [ () => "a", () => "b", () => "c" ]
     }
     test = makeTest({ files })
-    expect(test().hello().value.file()).toEqual("a")
-    expect(test().hello().value.file.file2).toEqual(jasmine.any(Function))
-    expect(test().hello().value.server.express()).toEqual("b")
-    expect(test().hello().value.server()).toEqual("c")
+    expect(test().file()).toEqual("a")
+    expect(test().file.file2).toEqual(jasmine.any(Function))
+    expect(test().server.express()).toEqual("b")
+    expect(test().server()).toEqual("c")
   })
 })
