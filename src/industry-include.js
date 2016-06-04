@@ -1,5 +1,17 @@
 import Tree from "./tree"
 
+function bindObject({ instance, tree }) {
+  let keys = []
+  for (let key in tree) {
+    if (instance[key]) {
+      bindObject({ instance: instance[key], tree: tree[key] })
+    } else {
+      instance[key] = tree[key]
+    }
+    keys.push(key)
+  }
+}
+
 export let include = Class =>
   class extends Class {
     static beforeFactoryOnce() {
@@ -34,16 +46,10 @@ export let include = Class =>
         for (let key in new_tree) {
           tree[key] = new_tree[key]
         }
-        
-        if (bind) {
-          for (let key in new_tree) {
-            this[key] = tree[key]
-            keys.push(key)
-          }
-        }
       }
 
       if (bind) {
+        let keys = bindObject({ instance: this, tree })
         this.Class.industry({
           ignore: { instance: keys },
           included: keys

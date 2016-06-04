@@ -22,6 +22,7 @@ describe("factory_state", () => {
           }
         }
 
+        file() {}
         hello({ include }) { return include }
       })
   }
@@ -56,7 +57,7 @@ describe("factory_state", () => {
       values: [ () => "a", () => "b", () => "c" ]
     }
     test = makeTest({ files })
-    expect(test().file()).toEqual("a")
+    expect(test().file()).toEqual(jasmine.any(Object))
     expect(test().file.file2).toEqual(jasmine.any(Function))
     expect(test().server.express()).toEqual("b")
     expect(test().server()).toEqual("c")
